@@ -28,14 +28,16 @@ class Store:
         else:
             return "error"
 
-    def set(self, key, value):
+    def set(self, key, value, should_log=True):
         """Set a [key] to the value [value]."""
         key_exists = self.key_exists(key)
 
-        if not self.is_empty():
+        if not self.is_empty() and should_log:
             transaction = self.transactions[-1]
             if key_exists:
-                transaction.deposit(self.set, key, self.get(key))
+                transaction.log(self.set, key, self.get(key), False)
+            else:
+                transaction.log(self.unset, key, False)
 
         self.store[key] = value
 
@@ -43,9 +45,12 @@ class Store:
         """Print out the value."""
         return self.store.get(key, 'NULL')
 
-    def unset(self, key):
+    def unset(self, key, should_log=True):
         """Delete the key."""
         if self.key_exists(key):
+            if not self.is_empty() and should_log:
+                self.transactions[-1].log(self.set, key, self.get(key), False)
+
             self.store.pop(key)
 
     def numequalto(self, value):

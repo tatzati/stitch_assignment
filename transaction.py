@@ -5,10 +5,13 @@ class Transaction:
     def __init__(self):
         self.commands = []
 
-    def deposit(self, command, *args):
+    def log(self, command, *args):
         """logs the command  and arguments to the command list"""
         self.commands.append((command, args))
 
     def rollback(self):
-        """Supposedly rollback the action, actually just emptying the command list"""
-        self.commands = []
+        """
+        Call all deposited commands in reverse order
+        """
+        for command in reversed(self.commands):
+            command[0](*command[1])

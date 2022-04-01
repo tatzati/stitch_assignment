@@ -5,8 +5,6 @@ import sys
 from store import Store
 
 """
-For the exercise I am assuming that the transactional part of the exercise is not supposed to actually work. 
-
 I have used a dictionary as the store data structure as it is the simples solution and has a constant O(1) in most of
 the commands except for the NUMEQUALTO operation, but that could be handled differently.
 """
